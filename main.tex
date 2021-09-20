@@ -1,0 +1,268 @@
+\documentclass[12pt]{extarticle}
+\usepackage[utf8]{inputenc}
+\usepackage[nottoc]{tocbibind}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc} 
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{cleveref}
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+ }
+\setcounter{MaxMatrixCols}{30}
+\renewcommand{\baselinestretch}{1.10}
+\newtheorem{theorem}{Theorem}
+\newtheorem{acknowledgement}{Acknowledgement}
+\newtheorem{algorithm}{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}{Case}
+\newtheorem{claim}{Claim}
+\newtheorem{conclusion}{Conclusi?n}
+\newtheorem{condition}{Condition}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterio}
+\newtheorem{definition}[theorem]{Definici\'{o}n}
+\newtheorem{example}[theorem]{Ejemplo}
+\newtheorem{exercise}[theorem]{Ejercicio}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{notation}[section]{Notaci\'{o}n}
+\newtheorem{problem}[theorem]{Problema}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{Assertion}[theorem]{Assertion}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{solution}[theorem]{Soluci\'{o}n}
+\newtheorem{summary}{Summary}
+\numberwithin{equation}{section}
+\newenvironment{proof}[1][Proof]{\text{#1.} }{\hfill $\square$}
+\newcommand{\qsum}{\boxplus}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\Le}{\mathcal{L}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\Limit}{\lim_{|x|\rightarrow\infty}}
+\newcommand{\Dsum}{\displaystyle\sum}
+\title{MCA: Multiple Correspondence Analysis}
+\author{Pan }
+\date{June 2021}
+
+\begin{document}
+\maketitle
+\section{Abbreviations and Glossary:}
+CA: Correspondence Analysis \\
+PCA: Principal Component Analysis \\
+MCA: Multiple Correspondence analysis \\
+SVD: Singular value decomposition \\
+
+\section{Motivation}
+Understand and optimize the presentation of the data\\
+Being centred on CA and in MCA the introduction to operations\\ 
+Find a way to present the data :)fgdfgdfgdfgdfg
+ddfgdfgdfgdfgdfgdfgdfgdffgdffgdffgdffgdfgdfg
+\section{An introduction to correspondence analysis}
+\begin{definition}
+The PCA is a method for reducing number of data and identifying dimensions explaining maximum variance in metric data. 
+\end{definition}
+\begin{definition}
+We can understand CA as technique that provides graphical representations of Cross-tables or contingency tables, as an exploratory method based on well-known geometrical paradigms which it's also a type of PCA but applied to categorical data. Both methods are based on the decomposition of a centered and normalized matrix.
+Now we have the CA Process:\\
+First, we need to use a cross-table or a contingency table, of two variables with $I$ rows and $J$ columns. This table will be denoted by $N$ and it's elements by $n_{ij}$ which means that the element is in the row $i$, and column $j$, with $i = 1,...,I$ and $j = 1,...,J$. \\
+The first step is to calculate the called \textit{Correspondence matrix} $P$ which elements are $p_{ij} = \frac{n_{ij}}{n}$ (The relative frequencies), where $n$ is the grand total$\left( \Dsum_{i=1}^I \Dsum_{j=1}^J n_{ij}  \right)$ of  $N$.\\
+\end{definition}
+Another important elements in CA are the marginal relative frequencies or masses, those are calculated as a row o column sum, as follows: 
+$r_{i \cdot} = \displaystyle \sum_{j=1}^J \frac{n_{ij}}{n}$ and $c_{\cdot j} = \displaystyle \sum_{i=1}^I \frac{n_{ij}}{n}$.\\
+(those will we be indistinctly with $r_i,c_i$) This elements serve to center and normalize the correspondence matrix.
+Since our main goal is to describe or solve an statistical question, it's  important comprehend how CA behaves when we do the hypothesis tests. \\
+\textbf{For example:} Under the null hypothesis of Independence (which usually means that the values appear with the same frequency), the expected values of the relative frequencies $p_{ij}$ will be the products of $r_i \cdot c_j$ or the masses. 
+Now, for the Centering and normalization process, above mentioned, we use $r_i$ and $c_j$ in the following ways: \\
+Centering is the simplest process, just consisting on calculating differences between observed $(p_{ij})$ and expected relative  $r_i \cdot \ c_j$ frequencies. \\
+The normalization process consist in dividing the previous differences by the square root of  $r_i \cdot c_j$  which leads to a matrix of standardized residuals: $S_{ij} = \frac{ ( p_{ij} -  r_i \cdot c_j) }{\sqrt{  r_i \cdot c_j}}$
+
+\begin{definition}
+A way to describe relationships in contingency tables is the chi-square statistic, which is defined as: 
+ $$ \chi^2 = \sum_i \sum_j \dfrac{(n_{ij} - \hat{n}_{ij})^2}{\hat{n}_{ij}} \text{ Where } \hat{n}_{ij} =  \frac{n_{\cdot i} \times n_{\cdot j}}{n}, \{i = 1,...,I; j= 1,...,J\}$$
+\\
+If we repeat this process for relative frequencies $(p_{ij})$, we obtain the chi-square divided by the grand total: 
+$$ \frac{\chi^2}{n} = \sum_i \sum_j \dfrac{(p_{ij} - \hat{p}_{ij})^2}{\hat{p}_{ij}} \text{ Where } \hat{p}_{ij} = r_i \times c_j$$
+\\
+And this is exactly the total inertia. \\
+\end{definition}
+\begin{definition}
+In the CA it's important to know the differences between the elements in the Cross-table, and this is possible by using the so-called $\chi^2$-distances, which are basically weighted Euclidean distances between normalized rows with weights inversely proportional to the square roots of the column totals. So, between the $i$ and the $k$ row we have:
+$$ d_{ik} = \sqrt{\Dsum_{j=1}^J\frac{(\frac{p_{ij}}{r_i} - \frac{p_{kj}}{r_k})^2}{c_j}}$$
+This is computes the $(\chi^2 )$ distances using the correspondence matrix %and displays them in a reasonably compact table. 
+\end{definition}
+
+It's important to know that this \emph{Chi-squared distances} are equal to the distances between the points represented in principal coordinates in the full space i.e. 
+This can be, also, interpreted (in a geometrical way) as the $\emph{weighted sum of squared distances}$ of the column profiles to the average profile. 
+\subsection{Reduction of dimensionality}
+In the CA/MCA, due to graphical limitations, here we usually use planar maps. Which shows pairs of dimensions at a time, but also are three-dimensional graphical displays can be used. 
+It's important to determine the number of dimensions that are going to be interpreted, this can be made in different ways (Similar to PCA): \begin{enumerate}
+\item  Consider all those with eigenvalues that explains more  than average inertia.
+\item  Examine all ''scree plot'' of eigenvalues to identify the ''elbow'' in the descending sequence.
+\item Use the application-based method of including all dimensions that have a coherent substantive interpretation.
+\end{enumerate}
+\subsection{Computing row scores (SVD)}
+Since or goal is to graphically represent  the $\chi^2$-distances we need to find a method to compute that representation. As we mentioned before there's a relation between the $\chi^2$-distance and the position of the dots in the plot representing rows as dots. \\
+The usage of singular value decomposition (SVD) provide us a method to compute this distances and create a plot.\\
+So, here we can use a algorithm-like process to compute this representation:\\
+First we need a matrix of \emph{standardized residuals}, which is exactly the matrix that we create in the normalization process. \\
+So we have: \\
+$\Omega = \{S_{ij}\} = \frac{ ( p_{ij} -  r_i \cdot c_j) }{\sqrt{  r_i \cdot c_j}}$
+This also can be expressed in matrix notation as: $$\Omega =D_r ^{-\frac{1}{2}} (P- r\cdot c ^T)D_c ^{-\frac{1}{2}}$$
+where $r, c$ are the vector of row and column masses, $D_r, D_C$ are the diagonal matrices with theses masses on the respective diagonals.
+them, we can apply the SVD to our matrix $\Omega$ (or $S$), which is basically find orthogonal matrices $V$ and $W$, together with a diagonal matrix $\Lambda$.  such that $\Omega = V \Lambda W^T, VV^T = WW^T =I$ \\
+Where $\Lambda$ is a diagonal matrix with singular values in descending order: $\Lambda =  \begin{pmatrix}
+\sigma_1 & \cdots &0 \\
+\vdots & \ddots & \vdots \\
+ 0 & \cdots & \sigma_S\\
+\end{pmatrix} $ where $\sigma_1 > \cdots < \sigma_S$ \\
+S is the rank of matrix $\Omega$, the columns of $V$, are the so-called \emph{left singular vectors} and those of $W$ \emph{right singular vectors}.
+Now, the scores of the rows, are given by: \\
+$R=\delta_r V \Lambda$ with \\
+$\delta_r = \begin{pmatrix}
+\frac{1}{\sqrt{p_{1 \cdot}}} & \cdots &0 \\
+\vdots & \ddots & \vdots \\
+ 0 & \cdots & \frac{1}{\sqrt{p_{I \cdot}}}\\
+\end{pmatrix}$
+\subsection{Contribution to inertia}
+Here, we are going to present an additional way to calculate the total inertia. \\
+We can obtain the amount of inertia of a row in a axis, for example, if we want to know the inertia of the row $i$ in the axis $s$, we just have to multiply the mass of the $i$Th row $(r_{i})$ by the squared coordinate of the $i$Th row of the $s$Th dimensions $(f ^2_{is})$, so it would be $r_i \cdot f^2_{is}$, we can also compute the inertia of the row, it will be $r_i \cdot \Dsum_ s f_{is}^2 $, y de aquí The sum of the inertias over all rows and over all dimensions, i.e., $\Dsum_i \Dsum_s r_i \cdot f^2_{is}$. gives the total inertia, the same hold for the columns, so we have the following equality: 
+$$ TTi= \Dsum_i \Dsum_s r_i \cdot f^2_{is} = \Dsum_j \Dsum_s c_j \cdot \mathrm{g}^2_{js}$$\\
+TTi represents the total inertia.\\
+\begin{definition}
+We define the principal inertias (eigenvalues) $\lambda_s$ as:  $$\lambda_s = \Dsum_i r_i\cdot f^2_{is} = \Dsum_j c_j\cdot \mathrm{g} ^2_{js}, s = 1,\dots,S$$ 
+\end{definition}
+With those equations (in  terms of rows and points) we can compute: 
+\begin{enumerate}
+\item  The contribution from each row or each column to total inertia. This is the amount of variance each row or column contributes to the geometric model as a whole. 
+\item Same as item 1, but with respect to single dimensions.
+\item  The contribution of each dimension to total inertia, i.e. the explained variance of each dimension. 
+\item The contribution of each dimension to the inertia of a row or column, i.e. the explained variance of each dimension to a point. The square roots of these values are often called \emph{factor loading's} because they are also correlation coefficients between the point and the dimension.
+\item  The amount of explained variance of the first $S^*$ dimensions to each row or to each column. These coefficients are called \emph{qualities } in CA, known as \emph{Communalities} in PCA
+\end{enumerate}
+   Now, it's important to carefully monitor  the low relative frequencies in CA.
+
+\subsection{Plotting}
+\subsubsection{Rows}
+In the previous section, we presented a method for finding distances between rows, even though, it's not very useful in order to present a plot, since it, usually, has a large dimension number.  Instead of that, using the SVD and taking just he first two component of each row's score, we can produce a reasonable approximation to the $\chi^2$-distances.\\
+Also, we can use some result from SVD, the principal a standard coordinates, that are very helpful to make this maps. So we have: \\
+\begin{align*}
+\text{Principal coordinates of rows}:  F = D_r^{-\frac{1}{2}} V\Lambda \\
+\text{Standard coordinates of rows}:  A = D_r^{-\frac{1}{2}} V 
+\end{align*}
+\\
+\subsubsection{Columns}
+In the same way that we used CA to derive a visual representation of the relationship between rows, we can also use it to illustrate the relationship between columns or between rows and columns.\\
+In the same way that the rows, we start deriving scores, but this time for the columns, from the SVD, so we calculate the matrix:\\
+$C=\delta_c W$ \\
+$\delta_c = \begin{pmatrix}
+\frac{1}{\sqrt{p_{ \cdot 1}}} & \cdots &0 \\
+\vdots & \ddots & \vdots \\
+ 0 & \cdots & \frac{1}{\sqrt{p_{ \cdot J}}}\\
+\end{pmatrix}$\\ 
+With this given, and in the same way that for rows, we can also obtain principal an standard coordinates for columns: 
+\begin{align*}
+\text{Principal coordinates of columns}:  G = D_c^{-\frac{1}{2}} W\Lambda \\
+\text{Standard coordinates of rows}:  B = D_c^{-\frac{1}{2}} W
+\end{align*}
+\\
+In he plotting process of a two-dimensional map we use:
+\begin{enumerate}
+\item The first two columns of the coordinates matrices $F$ and $G$ for the symmetric map.
+\item $A$ and $G$ for the asymmetric map of columns. 
+\item $F$ and $B$ for the asymmetric map of the rows
+\end{enumerate}
+Using any of this, the proportion of inertia explained would be $\frac{(\sigma_1^2 + \sigma_2^2)}{\Dsum_s \sigma_s^2}$ i.e. $\frac{(\lambda_1 + \lambda_2)}{\Dsum_s \lambda_s}$ 
+\subsection{Example}
+Here we are going to use the cross-table presented on the guide book. 
+So first we have: \\
+
+    \begin{table}[h]
+    \centering
+    \begin{tabular}{c c c c c c c }
+    \hline
+    \hspace{1pt} & U.K   & U.S. & Russia & Spain & France & Total \\ \hline
+       Agree strongly  & 230 & 400& 1010 & 201 & 365 & 2206 \\
+       Agree  & 329 & 471 & 530 & 639 & 478 & 2447 \\
+       Neither nor & 177 & 237 & 141 & 208 & 305 & 1068 \\
+       Disagree & 34 & 28 & 21 & 72 & 50 & 205 \\
+       Disagree strongly & 6 & 12 & 11 & 14 & 97 & 140 \\
+       Total & 776 & 1148 & 1713 & 1134 & 1295 & 6066  \\
+       \hline
+    \end{tabular}
+    \label{Table 1.1}
+\end{table}
+\newpage
+Also the percentage (per country) table: 
+    \begin{table}[H]
+    \centering
+    \begin{tabular}{c c c c c c c }
+    \hline
+    \hspace{1pt} & U.K   & U.S. & Russia & Spain & France & Average \\ \hline
+       Agree strongly  & 29.6 & 34.8 & 59 &17.7 & 28.2 & 36.4 \\
+       Agree  & 42.4 & 41 & 30.9 &56.4 & 36.9 & 40.3 \\
+       Neither nor &22.8 &20.6 &8.2 & 18.3 & 23.6 & 17.6 \\
+       Disagree &4.4 &2.4 &1.2 &6.5 &3.9 &3.4 \\
+       Disagree strongly &0.8 &1.1 &0.6 &1.2 &7.5 &2.3 \\
+       Total & 100 & 100 & 100 & 100 & 100 & 100  \\
+       \hline
+    \end{tabular}
+    \caption{}
+    \label{Table 1.2}
+\end{table}
+Now, since in the table 1.1, we can see that the grand total $n=6066$ we can compute the \emph{Correspondence matrix} 
+$$P = \begin{pmatrix}
+0.0379 & 0.0659 &  0.1665 & 0.0331 & 0.0601 \\
+0.0542 & 0.0776 &  0.0873 & 0.1053 & 0.0787 \\
+0.0291 & 0.039 & 0.0232 & 0.0342 & 0.0502 \\
+0.0056 & 0.0046 & 0.0034 & 0.0118 & 0.0082 \\
+0.0009 & 0.0019 & 0.0018 & 0.0023 & 0.0159 \\
+\end{pmatrix}$$
+\\
+If we present it as a table: 
+ \begin{table}[h]
+    \centering
+    \begin{tabular}{c c c c c c c }
+    \hline
+    \hspace{1pt} & U.K   & U.S. & Russia & Spain & France & Average \\ \hline
+       Agree strongly  &0.0379 & 0.0659 &  0.1665 & 0.0331 & 0.0601 & 0.3636 \\
+       Agree  & 0.0542 & 0.0776 &  0.0873 & 0.1053 & 0.0787 & 0.4033\\
+       Neither nor &0.0291 & 0.039 & 0.0232 & 0.0342 & 0.0502 & 0.176\\
+       Disagree &0.0056 & 0.0046 & 0.0034 & 0.0118 & 0.0082 & 0.0337 \\
+       Disagree strongly &0.0009 & 0.0019 & 0.0018 & 0.0023 & 0.0159 & 0.023  \\
+       Total & 0.12 & 0.1892 & 0.2823 & 0.1869 & 0.2134  &1 \\
+       \hline
+    \end{tabular}
+    \label{Table 1.2}
+\end{table}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
